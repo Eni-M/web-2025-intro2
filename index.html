@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eni Mirena — Portfolio</title>
+    <meta name="description" content="Eni Mirena — developer portfolio and GitHub projects.">
+    <style>
+        :root{
+            --bg:#071027;
+            --card:#071428;
+            --muted:#9aa4b2;
+            --accent:#6ee7b7;
+            --glass:rgba(255,255,255,0.04);
+            --glass-2:rgba(255,255,255,0.02);
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+            color:#e6eef6;
+            line-height:1.5;
+            background: linear-gradient(160deg, #04102a 0%, #081127 40%, #081127 100%);
+            overflow-y:auto;
+            position:relative;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+
+        /* animated background shapes */
+        body::before, body::after{
+            content:"";
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            z-index:0;
+            mix-blend-mode:screen;
+            opacity:0.12;
+        }
+        body::before{
+            background:
+                radial-gradient(800px 600px at 10% 20%, rgba(110,231,183,0.10), transparent 12%),
+                radial-gradient(600px 500px at 90% 80%, rgba(102,126,234,0.06), transparent 12%);
+            animation: drift 14s linear infinite alternate;
+            filter:blur(40px);
+        }
+        body::after{
+            background:
+                linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+            animation: slow-rotate 30s linear infinite;
+            transform-origin:center;
+        }
+
+        @keyframes drift{
+            from{transform:translate3d(-10px,-5px,0)}
+            to{transform:translate3d(10px,8px,0)}
+        }
+        @keyframes slow-rotate{
+            from{transform:rotate(0deg)}
+            to{transform:rotate(360deg)}
+        }
+
+        .container{
+            max-width:960px;
+            margin:48px auto;
+            padding:28px;
+            position:relative;
+            z-index:1;
+        }
+
+        header{
+            display:flex;
+            gap:18px;
+            align-items:center;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border:1px solid rgba(255,255,255,0.04);
+            padding:18px;
+            border-radius:14px;
+            backdrop-filter: blur(8px) saturate(120%);
+            box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+        }
+        .avatar{
+            width:112px;
+            height:112px;
+            border-radius:14px;
+            flex:0 0 112px;
+            background:linear-gradient(180deg, var(--glass), rgba(255,255,255,0.01));
+            display:grid;
+            place-items:center;
+            overflow:hidden;
+            border:1px solid rgba(255,255,255,0.04);
+            transition:transform .45s cubic-bezier(.2,.9,.2,1), box-shadow .3s;
+        }
+        .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+        .avatar:hover{transform:translateY(-6px) scale(1.03); box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+
+        h1{margin:0;font-size:1.6rem}
+        .lead{color:var(--muted);margin-top:6px; font-size:.95rem}
+        .buttons{margin-left:auto;display:flex;gap:8px}
+        a.btn{
+            background:transparent;
+            border:1px solid rgba(255,255,255,0.06);
+            padding:8px 12px;
+            border-radius:8px;
+            color:var(--accent);
+            text-decoration:none;
+            font-weight:600;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            transition:transform .18s ease, background .18s;
+        }
+        a.btn:hover{transform:translateY(-4px); background:rgba(110,231,183,0.04)}
+
+        main{margin-top:22px; display:grid; gap:18px}
+        .card{
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius:12px;
+            padding:18px;
+            border:1px solid rgba(255,255,255,0.04);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 8px 20px rgba(2,6,23,0.6);
+        }
+        .grid{
+            display:grid;
+            grid-template-columns: 1fr 320px;
+            gap:18px;
+        }
+        .bio p{margin:0 0 12px 0; color: #dce8f1}
+        .tags{display:flex;flex-wrap:wrap;gap:8px}
+        .tag{background:var(--glass-2);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:.85rem;border:1px solid rgba(255,255,255,0.02)}
+
+        /* Projects list */
+        ul.projects{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+        li.project{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);transition:transform .18s, box-shadow .18s}
+        li.project:hover{transform:translateY(-6px);box-shadow:0 8px 18px rgba(2,6,23,0.5)}
+        .proj-meta{flex:1}
+        .proj-title{font-weight:700;color:#e9fbf3}
+        .proj-desc{color:var(--muted);font-size:.92rem;margin-top:4px}
+
+        footer{margin-top:18px;color:var(--muted);font-size:.9rem;text-align:center}
+
+        /* subtle entrance animation */
+        .fade-in{
+            opacity:0;
+            transform:translateY(8px);
+            animation: fadeUp .7s cubic-bezier(.2,.9,.2,1) forwards;
+        }
+        .fade-in.delay-1{animation-delay:.08s}
+        .fade-in.delay-2{animation-delay:.16s}
+        .fade-in.delay-3{animation-delay:.24s}
+
+        @keyframes fadeUp{
+            to{opacity:1; transform:none}
+        }
+
+        @media (max-width:820px){
+            .grid{grid-template-columns:1fr; }
+            .buttons{margin-left:0}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="fade-in">
+            <div class="avatar" aria-hidden="true">
+                <img src="https://github.com/eni-mirena.png" alt="Eni Mirena avatar">
+            </div>
+            <div>
+                <h1>Eni Mirena</h1>
+                <div class="lead">Full‑stack developer. Open-source contributor. Building delightful web experiences.</div>
+                <div class="tags" style="margin-top:10px">
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">React</span>
+                    <span class="tag">Node.js</span>
+                    <span class="tag">CSS</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <a class="btn" href="https://github.com/eni-mirena" target="_blank" rel="noopener noreferrer">View GitHub</a>
+                <a class="btn" href="mailto:eni@example.com">Contact</a>
+            </div>
+        </header>
+
+        <main class="fade-in delay-1">
+            <div class="grid">
+                <section class="card bio">
+                    <h2 style="margin-top:0">About</h2>
+                    <p>Eni Mirena is a developer focused on modern web apps and open-source tooling. Passionate about performance, UX, and small teams delivering big impact.</p>
+                    <p>Work highlights: building front-end components, APIs, and developer tooling. Active on GitHub — check the projects to see recent repos.</p>
+
+                    <h3 style="margin-top:12px">Skills</h3>
+                    <div class="tags" style="margin-top:8px">
+                        <span class="tag">HTML</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Express</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                </section>
+
+                <aside class="card">
+                    <h3 style="margin-top:0">Quick Links</h3>
+                    <ul style="padding-left:18px;color:var(--muted);margin-top:8px">
+                        <li><a href="https://github.com/eni-mirena" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">GitHub profile</a></li>
+                        <li><a href="#" style="color:var(--accent);text-decoration:none">Resume (PDF)</a></li>
+                        <li><a href="#" style="color:var(--accent);text-decoration:none">Blog</a></li>
+                    </ul>
+                </aside>
+            </div>
+
+            <section class="card fade-in delay-2" style="margin-top:14px">
+                <h2 style="margin-top:0">Featured Projects</h2>
+                <ul class="projects" aria-live="polite">
+                    <li class="project">
+                        <div class="proj-meta">
+                            <div class="proj-title"><a href="https://github.com/eni-mirena/example-app" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none">example-app</a></div>
+                            <div class="proj-desc">A lightweight starter for modern web apps with fast build tooling and sensible defaults.</div>
+                        </div>
+                        <div style="color:var(--muted);font-size:.9rem">⭐ 1.2k</div>
+                    </li>
+
+                    <li class="project">
+                        <div class="proj-meta">
+                            <div class="proj-title"><a href="https://github.com/eni-mirena/ui-kit" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none">ui-kit</a></div>
+                            <div class="proj-desc">Reusable components and design tokens for consistent interfaces.</div>
+                        </div>
+                        <div style="color:var(--muted);font-size:.9rem">⭐ 820</div>
+                    </li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="fade-in delay-3">
+            Built with care • <a href="https://github.com/eni-mirena" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">GitHub</a>
+        </footer>
+    </div>
+</body>
+</html>
